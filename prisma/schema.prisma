@@ -60,4 +60,13 @@ model Post {
   userId        Int
   user          User        @relation(fields: [userId], references: [id])
   comments      Comment[]
+  categories    Category[]
+}
+
+model Category {
+  id            Int         @id @default(autoincrement())
+  name          String      @unique
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  posts         Post[]
 }

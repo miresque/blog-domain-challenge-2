@@ -18,9 +18,30 @@ async function main() {
         }
     })
     
+    const post1 = await prisma.post.create({
+        data: {
+            title: 'This is the title',
+            content: 'content area',
+            imageUrl: 'somerandomimage.url',
+            publishedAt: new Date(),
+            userId: 1,
+            categories: {
+                create: {
+                    name: 'Informative'
+                }
+            }
+        },
+        include: {
+            comments: true,
+            categories: true
+        }
+    })
+
     const user1Comment = await prisma.comment.create({
         data: {
-            content: 'hello wold'
+            content: 'hello wold',
+            userId: user1.id,
+            postId: 1
         },
         include: {
             replies: true
@@ -30,13 +51,16 @@ async function main() {
     const user1Reply = await prisma.comment.create({
         data: {
             content: 'hello world*',
-            originId: user1Comment.id
+            userId: user1.id,
+            originId: user1Comment.id,
+            postId: 1
         },
         include: {
             origin: true
         }
     })
-    console.log({ user1, user1Comment, user1Reply })
+
+    console.log({ user1, post1, user1Comment, user1Reply })
 }
 
 main()
